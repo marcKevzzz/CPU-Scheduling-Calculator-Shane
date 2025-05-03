@@ -1,0 +1,374 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CPU Scheduling</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <div class="toast-container position-fixed p-3" style="top: 3em; right: 0">
+      <div
+        class="toast align-items-center"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="liveToast"
+      >
+        <div class="d-flex">
+          <div class="toast-header text-danger pe-1 pt-2 fs-5">
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+          <div class="toast-body ps-2">Invalid Input.</div>
+          <button
+            type="button"
+            class="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div
+        class="d-flex flex-wrap justify-content-between position-relative head gap-4"
+      >
+        <!-- Left side -->
+        <div class="mb-4 left">
+          <div
+            class="bg-warning shadow-custom rounded px-4 py-2 d-inline-block"
+          >
+            <h1
+              class="font-reeenie text-primary mb-0 pt-2"
+              style="font-size: 2rem; user-select: none"
+            >
+              CPU Scheduling
+            </h1>
+          </div>
+
+          <div class="d-flex align-items-center mt-3 mb-2 user-select-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="#b3627b"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="me-2"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2l2.09 6.26L20 9l-5 3.64L16.18 20 12 16.9 7.82 20 9 12.64 4 9l5.91-.74L12 2z"
+              />
+            </svg>
+            <h2 class="text-primary fw-semibold fs-5 mb-0">
+              Select CPU Scheduling
+            </h2>
+          </div>
+
+          <ol
+            class="list-yellow list-unstyled position-relative shadow-custom-sm d-flex flex-column gap-1 py-4 kaw"
+            role="group"
+            aria-label="Radio toggle button group"
+          >
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio1"
+                autocomplete="off"
+                value="FCFS"
+                checked
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio1"
+              >
+                <span class="circle-number me-2">1</span> First Come First Serve
+                (FCFS)
+              </label>
+            </li>
+
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio2"
+                autocomplete="off"
+                value="SJF"
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio2"
+              >
+                <span class="circle-number me-2">2</span> Shortest Job First
+                (SJF)
+              </label>
+            </li>
+
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio3"
+                autocomplete="off"
+                value="NPP"
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio3"
+              >
+                <span class="circle-number me-2">3</span> Non Preemptive
+                Priority (NPP)
+              </label>
+            </li>
+
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio4"
+                autocomplete="off"
+                value="PP"
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio4"
+              >
+                <span class="circle-number me-2">4</span> Preemptive Priority
+              </label>
+            </li>
+
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio5"
+                autocomplete="off"
+                value="SRTF"
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio5"
+              >
+                <span class="circle-number me-2">5</span> Shortest Remaining
+                Time First
+              </label>
+            </li>
+
+            <li>
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio6"
+                autocomplete="off"
+                value="RR"
+              />
+              <label
+                class="btn btn-outline-warning d-flex px-1 border-0 text-start fw-semibold"
+                for="btnradio6"
+              >
+                <span class="circle-number me-2">6</span> Round Robin
+              </label>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Right side -->
+        <div class="flex-grow-1 mains">
+          <!-- Window controls top right -->
+
+          <!-- Top center input labels -->
+          <div class="w-100 pe-2 ms-1 mb-2">
+            <div class="btn-blue w-100 position-relative py-1 fw-semibold">
+              Table
+            </div>
+          </div>
+          <table class="table table-borderless" id="processTable">
+            <thead>
+              <tr>
+                <th>
+                  <div class="title-yellow flex-fill text-center">
+                    Jobs/Processes
+                  </div>
+                </th>
+                <th>
+                  <div class="title-yellow flex-fill text-center">
+                    Arival Time
+                  </div>
+                </th>
+                <th>
+                  <div class="title-yellow flex-fill text-center">
+                    Burst Time
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="body">
+              <tr>
+                <th>
+                  <div
+                    class="input-yellow flex-fill jobs text-center d-flex justify-content-center align-items-center"
+                    style="height: 100%"
+                  >
+                    P1
+                  </div>
+                </th>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    aria-label="Arrival Time input"
+                    class="input-yellow flex-fill form-control shadow-none"
+                    style="min-width: 0"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    aria-label="Burst Time input"
+                    class="input-yellow flex-fill form-control shadow-none"
+                    style="min-width: 0"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Inputs and Add Jobs button -->
+          <div class="d-flex align-items-center gap-3 mb-5 mt-3 pe-2 flex-wrap">
+            <div>
+              <button
+                type="button"
+                class="btn btn-blue px-1 delete flex-shrink-0"
+                style="white-space: normal; line-height: 1.2"
+                id="deleteRow"
+              >
+                Delete Process
+              </button>
+              <button
+                type="button"
+                class="btn btn-blue px-1 add flex-shrink-0 ms-1"
+                style="white-space: normal; line-height: 1.2"
+                id="addRow"
+              >
+                Add Process
+              </button>
+            </div>
+            <button
+              type="button"
+              class="btn bg-warning fw-semibold btn-w py-2 ms-auto add calc flex-shrink-0"
+              style="white-space: normal; line-height: 1.2"
+              id="calculate"
+            >
+              Calculate
+            </button>
+          </div>
+
+          <!-- Four blue buttons with numbers -->
+          <div class="d-flex flex-column gap-3" style="max-width: 100%">
+            <div class="bottom-window w-100">
+              <div class="bottom-window-header w-100 position-relative">
+                Timeline and Gantt Chart
+                <span class="circle-number">1</span>
+              </div>
+              <div class="bottom-window-body">
+                <div id="timeline" class="d-flex flex-row mt-1 mb-5"></div>
+                <div id="ganttChart" class="px-3 mt-2">
+                  <div id="head" class="d-flex flex-row"></div>
+                  <div id="gbody" class="d-flex flex-row"></div>
+                  <div id="tail" class="d-flex flex-row"></div>
+                  <div id="queue" class="d-flex flex-row"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-window w-100">
+              <div class="bottom-window-header w-100 position-relative">
+                Turn-around Time
+                <span class="circle-number">2</span>
+              </div>
+              <div class="bottom-window-body">
+                <div
+                  class="table-btn d-flex px-2 pe-4"
+                  style="max-width: 100%; width: 70%"
+                >
+                  <table class="table" id="resultTable">
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-window w-100">
+              <div class="bottom-window-header w-100 position-relative">
+                Waiting Time
+                <span class="circle-number">3</span>
+              </div>
+              <div class="bottom-window-body">
+                <div
+                  class="table-btn d-flex px-2 pe-4"
+                  style="max-width: 100%; width: 70%"
+                >
+                  <table class="table" id="resultTableWaitingTime">
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-window w-100">
+              <div class="bottom-window-header w-100 position-relative">
+                Percentage of CPU Scheduling
+                <span class="circle-number">4</span>
+              </div>
+              <div class="bottom-window-body">
+                <div
+                  class="cpuResult d-flex gap-3 px-2 fw-normal"
+                  id="cpuResult"
+                >
+                  <div class="d-flex flex-column cpuComp">
+                    <p id="process" class="text-center fw-normal fs-6"></p>
+                    <div class="cpu-vrline"></div>
+                    <p id="completion" class="fs-6 fw-normal"></p>
+                  </div>
+                  <p
+                    class="d-flex justify-content-center align-items-center fs-6 fw-normal"
+                  >
+                    <span id="cpuUtil"></span>
+                    <span
+                      id="cpuTotal"
+                      style="height: fit-content"
+                      class="px-2 bg-blue rounded ms-2 fs-6 fw-normal"
+                    ></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="script.js"></script>
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
