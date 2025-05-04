@@ -13,7 +13,11 @@ export function calculateRR(processes, timeQuantum) {
   let currentTime = 0;
   let totalIdle = 0;
 
-  while (completed.length < n) {
+  while (completed.length < n && remaining.some((p) => p.remaining > 0)) {
+    console.log("Current Time:", currentTime);
+    console.log("Remaining Processes:", remaining);
+    console.log("Ready Queue:", readyQueue);
+
     // Add newly arrived processes in order of arrival
     remaining
       .filter(
@@ -26,6 +30,7 @@ export function calculateRR(processes, timeQuantum) {
       .forEach((p) => {
         readyQueue.push(p);
         addedToQueue.add(p.process);
+        console.log("Added to queue:", p);
       });
 
     if (readyQueue.length === 0) {
@@ -53,7 +58,6 @@ export function calculateRR(processes, timeQuantum) {
     }
 
     const p = readyQueue.shift();
-
     if (p.start === null) {
       p.start = currentTime;
     }
@@ -77,6 +81,7 @@ export function calculateRR(processes, timeQuantum) {
       .forEach((proc) => {
         readyQueue.push(proc);
         addedToQueue.add(proc.process);
+        console.log("Added during execution:", proc);
       });
 
     const displayQueue = [...readyQueue]

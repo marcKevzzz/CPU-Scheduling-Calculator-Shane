@@ -32,7 +32,7 @@ function scheduleAndRender(algorithm, options = {}, mode) {
 
     renderResultTableTurnaround(result);
     renderResultTableWaiting(result);
-    renderGanttChart(result, options, ganttChart);
+    renderGanttChart(options, ganttChart);
     generateTimeline(result);
     renderCPUUtilization(totalIdle, totalTime, ganttChart);
   } catch (error) {
@@ -188,17 +188,25 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case "NPP":
-        validateTableInputs(calculateNPP, {
-          showQueue: true,
-          algorithm: "NPP",
-        });
+        validateTableInputs(
+          calculateNPP,
+          {
+            showQueue: true,
+            algorithm: "NPP",
+          },
+          "priority"
+        );
         break;
 
       case "PP":
-        validateTableInputs(calculatePP, {
-          showQueue: true,
-          algorithm: "PP",
-        });
+        validateTableInputs(
+          calculatePP,
+          {
+            showQueue: true,
+            algorithm: "PP",
+          },
+          "priority"
+        );
         break;
 
       case "SRTF":
@@ -215,8 +223,13 @@ document.addEventListener("DOMContentLoaded", function () {
             showQueue: true,
             algorithm: "RR",
           },
-          "RR"
+          "roundrobin"
         );
+
+        // validateTableInputs(calculateSRTF, {
+        //   showQueue: true,
+        //   algorithm: "SRTF",
+        // });
         break;
     }
   });

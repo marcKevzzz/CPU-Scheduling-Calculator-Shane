@@ -2,7 +2,10 @@ let turnaroundResult = [];
 
 import { updateTableColumns } from "../script.js";
 
-export function renderGanttChart(result, options = {}, ganttChart) {
+export function renderGanttChart(options = {}, ganttChart) {
+  console.log("Type of ganttChart:", typeof ganttChart);
+  console.log("Value of ganttChart:", ganttChart);
+
   const {
     showQueue = true,
     algorithm = "FCFS",
@@ -14,7 +17,8 @@ export function renderGanttChart(result, options = {}, ganttChart) {
     },
   } = options;
 
-  console.table(ganttChart.rbt);
+  console.table("oo nga" + ganttChart);
+
   const h = document.getElementById(containerIds.head);
   const b = document.getElementById(containerIds.body);
   const t = document.getElementById(containerIds.tail);
@@ -161,7 +165,7 @@ function renderQueueTimeline(ganttChart, q, algorithm) {
   // 🟢 Track processes that are already completed
   const completedSet = new Set();
 
-  ganttChart.forEach((entry, index) => {
+  ganttChart.forEach((entry) => {
     const queueDiv = document.createElement("div");
     queueDiv.classList.add("text-center");
     queueDiv.style.width = "40px";
@@ -188,10 +192,20 @@ function renderQueueTimeline(ganttChart, q, algorithm) {
 
       // ✅ Slash only once — when it finishes
       if (
-        (algorithm === "RR" || algorithm === "SRTF" || algorithm === "PP") &&
+        ["RR", "SRTF", "PP"].includes(algorithm) &&
         entry.label === name &&
-        entry.rbt === 0 &&
+        (entry.rbt === 0 ||
+          algorithm === "SRTF" ||
+          algorithm === "RR" ||
+          algorithm === "PP") &&
         !completedSet.has(name)
+      ) {
+        span.classList.add("slashed");
+        completedSet.add(name); // Mark as completed
+        console.log("Slashing", name, "at time", entry.end);
+      } else if (
+        ["FCFS", "SJF", "NPP"].includes(algorithm) &&
+        entry.label === name
       ) {
         span.classList.add("slashed");
         completedSet.add(name); // Mark as completed
@@ -409,7 +423,7 @@ export function addRow(tableSelector, algorithm = "", isFirstRow = false) {
   if (algorithm === "RR" && isFirstRow) {
     rowContent += `
       <td class="timeQuantum-col">
-        <input type="number" min="1" class="input-yellow flex-fill form-control shadow-none" />
+        <input type="number" min="1" class="input-yellow flex-fill form-control shadow-none" id="timeQuantum" />
       </td>
     `;
   }
@@ -442,7 +456,6 @@ export function onAlgorithmChange(algorithm) {
     // Change 5 to your desired number of rows
     addRow("#processTable", algorithm);
   }
-
   updateTableColumns(algorithm); // Also updates headers
 }
 
@@ -455,12 +468,12 @@ export function deleteRow(tableSelector) {
   }
 }
 
-export function getProcessData(tableSelector, mode = "PP") {
+export function getProcessData(tableSelector, mode = "priority") {
   const rows = document.querySelectorAll(`${tableSelector} tbody tr`);
   const processes = [];
 
   let timeQuantum = null;
-  if (mode === "RR") {
+  if (mode === "roundrobin") {
     const tqInput = document.getElementById("timeQuantum");
     if (tqInput) {
       const parsedTQ = parseInt(tqInput.value);
@@ -487,7 +500,7 @@ export function getProcessData(tableSelector, mode = "PP") {
         burst,
       };
 
-      if ((mode === "PP" || mode === "NPP") && !isNaN(extra)) {
+      if (mode === "priority" && !isNaN(extra)) {
         process.priority = extra;
       }
 
