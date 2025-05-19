@@ -347,20 +347,35 @@
                   id="cpuResult"
                 >
                   <div class="d-flex flex-column cpuComp">
-                    <p id="process" class="text-center fw-normal fs-6"></p>
+                    <p id="process" class="text-center fw-normal fs-6 mb-0"></p>
                     <div class="cpu-vrline"></div>
-                    <p id="completion" class="fs-6 fw-normal"></p>
+
+                    <p id="completion" class="fs-6 fw-normal mb-0 pt-2"></p>
                   </div>
-                  <p
+                  <div
                     class="d-flex justify-content-center align-items-center fs-6 fw-normal"
                   >
-                    <span id="cpuUtil"></span>
+                    <span id="waladin" class="p-0"> </span>
+                    <div
+                      class="d-flex flex-column align-items-center justify-items-center justify-content-center dito"
+                    >
+                      <div
+                        class="d-flex borders pb-1"
+                        id="adds"
+                        style="width: 100%"
+                      ></div>
+                      <div class="cpu-vrline"></div>
+
+                      <span class="inline-block pt-1" id="burstt"> </span>
+                    </div>
+
+                    <span id="wala" class="d-flex align-items-center"></span>
                     <span
                       id="cpuTotal"
                       style="height: fit-content"
                       class="px-2 bg-blue rounded ms-2 fs-6 fw-normal"
                     ></span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>

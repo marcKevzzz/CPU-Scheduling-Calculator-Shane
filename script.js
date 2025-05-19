@@ -32,9 +32,9 @@ function scheduleAndRender(algorithm, options = {}, mode) {
 
     renderResultTableTurnaround(result);
     renderResultTableWaiting(result);
-    renderGanttChart(options, ganttChart);
+    renderGanttChart(result, options, ganttChart);
     generateTimeline(result);
-    renderCPUUtilization(totalIdle, totalTime, ganttChart);
+    renderCPUUtilization(result, totalIdle, ganttChart);
   } catch (error) {
     console.error("Error during scheduling or rendering:", error);
   }

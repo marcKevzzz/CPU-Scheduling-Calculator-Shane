@@ -21,6 +21,12 @@ body {
   box-shadow: 4px 4px 0 0 rgba(58, 74, 143, 0.7);
 }
 
+.dito {
+  margin: 0 5px;
+  border-color: #3a4a8f !important;
+  position: relative;
+}
+
 .circle-number {
   width: 24px;
   height: 24px;
@@ -326,7 +332,7 @@ input::-webkit-inner-spin-button {
   width: 100%;
   border-top: 1px solid #3a4a8f;
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 0;
 }
 

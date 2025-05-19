@@ -2,7 +2,7 @@ let turnaroundResult = [];
 
 import { updateTableColumns } from "../script.js";
 
-export function renderGanttChart(options = {}, ganttChart) {
+export function renderGanttChart(result, options = {}, ganttChart) {
   console.log("Type of ganttChart:", typeof ganttChart);
   console.log("Value of ganttChart:", ganttChart);
 
@@ -97,16 +97,15 @@ export function renderGanttChart(options = {}, ganttChart) {
     btLbl.innerHTML = "<strong>Bt</strong>";
     btHeader.appendChild(btLbl);
 
-    // Build burst map for each process
-    const burstDurationsMap = {};
-    ganttChart.forEach((entry) => {
-      if (entry.label !== "i") {
-        burstDurationsMap[entry.label] ??= 0;
-        burstDurationsMap[entry.label] += entry.end - entry.start;
-      }
+    const originalBurstMap = {};
+    result.forEach((proc) => {
+      originalBurstMap[proc.process ?? proc.label] = proc.burst;
     });
+    const rbtMap = {};
+    const appearedProcesses = new Set();
 
     // Add RBt and Bt per Gantt chart entry
+
     ganttChart.forEach((entry) => {
       const rbtDiv = document.createElement("div");
       rbtDiv.style.width = "40px";
@@ -118,10 +117,22 @@ export function renderGanttChart(options = {}, ganttChart) {
 
       if (entry.label === "i") {
         rbtDiv.textContent = "";
-        btDiv.textContent = "1";
+        btDiv.textContent = "1"; // Idle time
       } else {
         rbtDiv.textContent = entry.rbt === 0 ? "" : entry.rbt ?? "";
-        btDiv.textContent = burstDurationsMap[entry.label] ?? "";
+
+        if (appearedProcesses.has(entry.label)) {
+          // Process already appeared before - show remaining burst time from rbtMap
+          btDiv.textContent = rbtMap[entry.label];
+          // Update rbtMap with latest rbt for next appearance
+          rbtMap[entry.label] = entry.rbt;
+        } else {
+          // First appearance - show original burst time
+          btDiv.textContent = originalBurstMap[entry.label] ?? "";
+          appearedProcesses.add(entry.label);
+          // Initialize rbtMap for the process with its current rbt
+          rbtMap[entry.label] = entry.rbt;
+        }
       }
 
       rbtHeader.appendChild(rbtDiv);
@@ -170,7 +181,6 @@ function renderQueueTimeline(ganttChart, q, algorithm) {
     queueDiv.classList.add("text-center");
     queueDiv.style.width = "40px";
     queueDiv.style.minWidth = "40px";
-    queueDiv.style.fontSize = "14px";
     queueDiv.style.display = "flex";
     queueDiv.style.flexDirection = "column";
     queueDiv.style.alignItems = "center";
@@ -337,17 +347,28 @@ export function generateTimeline(result) {
   timeline.appendChild(vrline);
 }
 
-export function renderCPUUtilization(totalIdle, totalTime, ganttChart) {
+export function renderCPUUtilization(result, totalIdle, ganttChart) {
   let timeline = [];
+  let totalBurst = 0;
 
   ganttChart.forEach((p) => {
-    timeline.push(p.end - p.start);
+    const duration = p.end - p.start;
+    timeline.push(duration);
+    totalBurst += duration;
   });
+
+  let totalBt = 0;
+
+  result.forEach((p) => {
+    totalBt += p.burst;
+  });
+  const totalTime =
+    ganttChart.length > 0 ? ganttChart[ganttChart.length - 1].end : 0;
   const cpuUtil = ((totalTime - totalIdle) / totalTime) * 100;
-  document.getElementById("cpuUtil").textContent = ` =  ${(
-    (totalTime - totalIdle) /
-    totalTime
-  ).toFixed(4)}  × 100 = `;
+  document.getElementById("burstt").textContent = ` ${totalBurst}`;
+  document.getElementById("adds").textContent = ` ${totalBt} `;
+  document.getElementById("wala").textContent = ` × 100 =`;
+  document.getElementById("waladin").textContent = `  =`;
   document.getElementById("cpuTotal").textContent = `${cpuUtil.toFixed(2)}%`;
 
   // Display all timeline times
@@ -356,7 +377,7 @@ export function renderCPUUtilization(totalIdle, totalTime, ganttChart) {
 
   // Display the number of processes
   const processCountElement = document.getElementById("process");
-  processCountElement.textContent = `${ganttChart.length}`;
+  processCountElement.textContent = `${totalBt}`;
 }
 
 export function renderTableHeader(tableSelector, algorithm) {
